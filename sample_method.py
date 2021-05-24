@@ -64,7 +64,7 @@ def generate_all_ouput(model, train_batches):
 def select_sample_CY(model, train_batches, noise_samples_count, sample_rate, sample_criterion, radius):
     Y, Output, Noise_out, _ = generate_noise_samples_and_output(model, train_batches, noise_samples_count, radius)
 
-    # 确定抽样评估值
+    # 确定抽样评估值(ed)
     dy = torch.norm(Noise_out[0] - Output, 2, 1).view(-1, 1)
     for i in range(1, noise_samples_count):
         dy = torch.cat((dy, torch.norm(Noise_out[i] - Output, 2, 1).view(-1, 1)), 1)

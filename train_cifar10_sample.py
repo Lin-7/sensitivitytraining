@@ -142,7 +142,7 @@ def get_args():
     parser.add_argument('--Qneighbors', default=5, type=int)
     parser.add_argument('--sen-lambda', default=0.05, type=float)
     parser.add_argument('--sen-radius', default=7.65, type=float)
-    parser.add_argument('--sample-method', default='sens', type=str, choices=['random', 'confid', 'sens', 'grad', 'lossvalue'])
+    parser.add_argument('--sample-method', default='lossvalue', type=str, choices=['random', 'confid', 'sens', 'grad', 'lossvalue'])
     parser.add_argument('--sample-criterion', default='Nearest', type=str, choices=['Furthest', 'Nearest'])
     parser.add_argument('--sample-rate', default=0.8, type=float)
     
@@ -348,14 +348,14 @@ def main():
             sample_index = random.sample(list(lenx), int(args.sample_rate * len(train_set)))
         else:
             if args.sample_method == 'sens':
-                sample_index, mean_value = select_sample_CY(model, train_batches, 3, args.sample_rate, args.sample_criterion, radius)
+                sample_index = select_sample_CY(model, train_batches, 3, args.sample_rate, args.sample_criterion, radius)
             if args.sample_method == 'confid':
-                sample_index, mean_value = select_sample_CP(model, train_batches, args.sample_rate, args.sample_criterion)
+                sample_index = select_sample_CP(model, train_batches, args.sample_rate, args.sample_criterion)
             if args.sample_method == 'grad':
-                sample_index, mean_value = select_sample_DY(model, train_batches, args.sample_rate, args.sample_criterion)
+                sample_index = select_sample_DY(model, train_batches, args.sample_rate, args.sample_criterion)
             if args.sample_method == 'lossvalue':
                 CEloss = nn.CrossEntropyLoss(reduction='none')
-                sample_index, mean_value = select_sample_LV(model, train_batches, args.sample_rate, args.sample_criterion, CEloss)
+                sample_index = select_sample_LV(model, train_batches, args.sample_rate, args.sample_criterion, CEloss)
         sample_index.sort()
         e_s_time = time.time()
         logger.info('%.10f', e_s_time-s_s_time)

@@ -26,18 +26,6 @@ def normalize(X):
 def clamp(X, lower_limit, upper_limit):
     return torch.max(torch.min(X, upper_limit), lower_limit)
 
-
-def eval_interval_schedule(t, epochs):
-    if t / epochs <= 0.5:
-        return 30
-    elif t / epochs <= 0.75:
-        return 1
-    elif t / epochs <= 0.8:
-        return 1
-    else:
-        return 1
-
-
 class Batches():
     def __init__(self, dataset, batch_size, shuffle, set_random_choices=False, num_workers=0, drop_last=False):
         self.dataset = dataset
